@@ -17,24 +17,25 @@ buf = [[graph[i-1]] for i in count]
 
 plt.ion()
 
-while (True):
-    plt.clf() # clear screen
+while True:
     correction = [0.0 for _ in range(number)]
     for i in range(number):
         buf[i].append(graph[count[i]])
-        # if not over threshold, continue, else add potential to others
-        if (count[i] < 186):
-            count[i] += 1
-        else:
+        count[i] += 1
+        # if over threshold, add potential to others
+        if (count[i] > 186):
             for j in range(number):
                 correction[j] += 2
-        if (len(buf[i]) > 400):
-            buf[i].pop(0)
-        plt.plot(buf[i])
-    # error correction at end of plot
+                
+    # reset neuron if hyperpolerisation reached
     for j in range(number):
         if (boost(graph[count[j]] + correction[j]) > 186):
             count[j] = 1
         else:
             count[j] = boost(graph[count[j]] + correction[j])
+        # if buffer over 400 length, delete first item and then plot
+        if (len(buf[j]) > 400):
+            buf[j].pop(0)
+        plt.plot(buf[j])
     plt.pause(0.001)
+    plt.clf() # clear screen
