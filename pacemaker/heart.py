@@ -11,7 +11,7 @@ def boost(x):
         i += 1
     return i
 
-number = 5
+number = 50
 count = [random.randint(0, 188) for _ in range(number)]
 buf = [[graph[i-1]] for i in count]
 
@@ -21,21 +21,20 @@ while (True):
     plt.clf() # clear screen
     correction = [0.0 for _ in range(number)]
     for i in range(number):
-        if (count[i] < 187):
-            # if not over threshold, continue
-            buf[i].append(graph[count[i]])
+        buf[i].append(graph[count[i]])
+        # if not over threshold, continue, else add potential to others
+        if (count[i] < 186):
             count[i] += 1
         else:
-            # otherwise reset
-            count[i] = 1
-            buf[i].append(graph[0])
-            # add potential to other neurons
             for j in range(number):
-                if ((i != j) and (correction[j] == 0)):
-                    correction[j] += 10
+                correction[j] += 2
         if (len(buf[i]) > 400):
             buf[i].pop(0)
         plt.plot(buf[i])
+    # error correction at end of plot
     for j in range(number):
-        count[j] = boost(graph[count[j]] + correction[j])
+        if (boost(graph[count[j]] + correction[j]) > 186):
+            count[j] = 1
+        else:
+            count[j] = boost(graph[count[j]] + correction[j])
     plt.pause(0.001)
