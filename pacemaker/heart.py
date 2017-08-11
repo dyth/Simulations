@@ -12,7 +12,7 @@ def boost(x):
     return i
 
 number = 50
-count = [random.randint(0, 188) for _ in range(number)]
+count = [random.randint(0, 187) for _ in range(number)]
 buf = [[graph[i-1]] for i in count]
 
 plt.ion()
